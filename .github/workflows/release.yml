@@ -1,0 +1,103 @@
+name: Release
+
+# Triggers when you push a version tag like v1.0.0
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+
+  build-macos:
+    name: Build macOS (.app)
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Build Tauri app
+        run: npm run build
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-app
+          path: src-tauri/target/release/bundle/macos/*.app
+          if-no-files-found: error
+
+  build-windows:
+    name: Build Windows (.exe)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Build Tauri app
+        run: npm run build
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-exe
+          path: src-tauri/target/release/bundle/msi/*.msi
+          if-no-files-found: error
+
+  release:
+    name: Create GitHub Release
+    needs: [build-macos, build-windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-app
+          path: artifacts/macos
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-exe
+          path: artifacts/windows
+
+      - name: Zip macOS .app
+        run: zip -r artifacts/wheel-of-names-macos.zip artifacts/macos/
+
+      - name: Create Release and upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ github.ref_name }}
+          body: |
+            ## Wheel of Names ${{ github.ref_name }}
+
+            ### Downloads
+            - **Mac**: `wheel-of-names-macos.zip` → unzip and move `wheel-of-names.app` to your Applications folder
+            - **Windows**: `.msi` installer → run it to install
+
+            > **Mac note:** First launch — right-click → Open to bypass the unidentified developer warning (app is not code-signed).
+          files: |
+            artifacts/wheel-of-names-macos.zip
+            artifacts/windows/*.msi

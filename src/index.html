@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wheel of Names</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- ── Left Panel ── -->
+    <div class="panel panel-left">
+
+      <div class="panel-header">
+        <h1>Wheel of Names</h1>
+      </div>
+
+      <!-- Add name input -->
+      <div class="input-group">
+        <input
+          type="text"
+          id="name-input"
+          placeholder="Enter a name…"
+          maxlength="50"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button id="btn-add" class="btn btn-primary">Add</button>
+      </div>
+
+      <!-- Spin behaviour toggle -->
+      <div class="setting-row">
+        <span class="setting-label">Remove winner after spin</span>
+        <label class="toggle" title="When ON, the winner is removed from the wheel after each spin">
+          <input type="checkbox" id="toggle-remove" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <!-- Names list header -->
+      <div class="names-header">
+        <span id="names-count">0 names</span>
+        <div class="names-header-actions">
+          <div id="actions-normal">
+            <button id="btn-restore" class="btn btn-restore btn-sm hidden">Restore All</button>
+            <button id="btn-clear"   class="btn btn-ghost   btn-sm">Clear All</button>
+          </div>
+          <div id="actions-confirm" class="hidden">
+            <span class="confirm-text">Delete all?</span>
+            <button id="btn-confirm-yes" class="btn btn-danger btn-sm">Yes</button>
+            <button id="btn-confirm-no"  class="btn btn-ghost  btn-sm">No</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Names list -->
+      <ul id="names-list" class="names-list"></ul>
+
+      <!-- Empty state -->
+      <div id="empty-state" class="empty-state">
+        <div class="empty-icon">👥</div>
+        <p>No names yet.<br />Add some to get started!</p>
+      </div>
+
+    </div>
+
+    <!-- ── Right Panel: Wheel ── -->
+    <div class="panel panel-right">
+      <canvas id="wheel-canvas"></canvas>
+      <button id="btn-spin" class="btn btn-spin" disabled>Spin</button>
+      <p id="spin-hint" class="spin-hint">Add at least 2 names to spin</p>
+    </div>
+
+  </div>
+
+  <!-- ── Winner Banner ── -->
+  <div id="winner-banner" class="winner-banner hidden" role="status" aria-live="polite">
+    <span id="winner-name" class="banner-name"></span>
+    <button id="btn-continue" class="btn btn-banner-continue">OK</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
