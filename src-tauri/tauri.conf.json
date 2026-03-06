@@ -17,7 +17,7 @@
       "active": true,
       "targets": "all",
       "identifier": "com.wheelofnames.app",
-      "icon": ["icons/icon.png", "icons/icon.ico"]
+      "icon": ["icons/icon.png", "icons/icon.ico", "icons/icon.icns"]
     },
     "security": {
       "csp": null
