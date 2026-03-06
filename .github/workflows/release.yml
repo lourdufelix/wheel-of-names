@@ -48,6 +48,9 @@ jobs:
       - name: Build Tauri app
         run: npm run build
 
+      - name: Remove quarantine attribute
+        run: xattr -cr src-tauri/target/release/bundle/macos/wheel-of-names.app
+
       - name: Zip .app with ditto (preserves permissions)
         run: ditto -c -k --sequesterRsrc --keepParent src-tauri/target/release/bundle/macos/wheel-of-names.app artifacts/wheel-of-names-macos.zip
 
