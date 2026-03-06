@@ -48,11 +48,14 @@ jobs:
       - name: Build Tauri app
         run: npm run build
 
+      - name: Zip .app with ditto (preserves permissions)
+        run: ditto -c -k --sequesterRsrc --keepParent src-tauri/target/release/bundle/macos/wheel-of-names.app artifacts/wheel-of-names-macos.zip
+
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
         with:
           name: macos-app
-          path: src-tauri/target/release/bundle/macos/*.app
+          path: artifacts/wheel-of-names-macos.zip
           if-no-files-found: error
 
   build-windows:
@@ -121,9 +124,6 @@ jobs:
           name: windows-exe
           path: artifacts/windows
 
-      - name: Zip macOS .app
-        run: zip -r artifacts/wheel-of-names-macos.zip artifacts/macos/
-
       - name: Create Release and upload assets
         uses: softprops/action-gh-release@v2
         with:
@@ -132,10 +132,10 @@ jobs:
             ## Wheel of Names ${{ github.ref_name }}
 
             ### Downloads
-            - **Mac**: `wheel-of-names-macos.zip` → unzip and move `wheel-of-names.app` to your Applications folder
+            - **Mac**: `wheel-of-names-macos.zip` → unzip and double-click `wheel-of-names.app`
             - **Windows**: `.msi` installer → run it to install
 
             > **Mac note:** First launch — right-click → Open to bypass the unidentified developer warning (app is not code-signed).
           files: |
-            artifacts/wheel-of-names-macos.zip
+            artifacts/macos/wheel-of-names-macos.zip
             artifacts/windows/*.msi
