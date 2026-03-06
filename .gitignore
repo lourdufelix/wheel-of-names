@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Rust / Tauri build output
+src-tauri/target/
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
