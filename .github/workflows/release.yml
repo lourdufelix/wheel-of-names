@@ -73,8 +73,23 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+      - name: Install Rust (with retries)
+        shell: pwsh
+        run: |
+          $attempts = 0
+          $maxAttempts = 3
+          do {
+            $attempts++
+            Write-Host "Attempt $attempts of $maxAttempts..."
+            rustup toolchain install stable --profile minimal --no-self-update
+            if ($LASTEXITCODE -eq 0) { break }
+            if ($attempts -lt $maxAttempts) {
+              Write-Host "Failed, retrying in 15 seconds..."
+              Start-Sleep -Seconds 15
+            }
+          } while ($attempts -lt $maxAttempts)
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          rustup default stable
 
       - name: Cache Rust dependencies
         uses: actions/cache@v4
