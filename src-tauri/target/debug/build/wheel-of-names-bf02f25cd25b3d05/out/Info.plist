@@ -3,10 +3,10 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleName</key>
-	<string>Wheel of Names</string>
+	<string>wheel-of-names</string>
 	<key>CFBundleShortVersionString</key>
 	<string>0.1.0</string>
 	<key>CFBundleVersion</key>
-	<string>20260306.183154</string>
+	<string>20260307.031629</string>
 </dict>
 </plist>
